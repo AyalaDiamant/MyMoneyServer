@@ -7,7 +7,6 @@ using MoneySystemServer.Controllers;
 
 namespace Api.Controllers
 {
-   
     public class PDFController : GlobalController
     {
         private IPDFService pdfService;
