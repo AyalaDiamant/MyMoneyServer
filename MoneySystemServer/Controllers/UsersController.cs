@@ -1,4 +1,5 @@
-﻿using Logic;
+﻿using Api.Code;
+using Logic;
 using Logic.DTO;
 using Logic.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -11,46 +12,41 @@ namespace MoneySystemServer.Controllers
     public class UsersController : GlobalController
     {
         private IUserService userService;
-
         public UsersController(IUserService userService)
         {
             this.userService = userService;
         }
         [IsActive]
-        [IsPermission]
+        [IsPermissionSetting]
         [HttpPost]
         public GResult<List<UserDTO>> GetUsers(UserSerach userSerach)
         {
-        
             return Success(userService.GetUsers(UserId.Value, userSerach));
         }
 
         [HttpGet("{id}")]
-        public GResult<UserDTO> GetUser(int id)
+        public GResult<UserGlobalDTO> GetUser(int id)
         {
-
             return Success(userService.GetUser(id));
         }
 
-
-
         [AllowAnonymous]
         [HttpPost]
-        public Result AddUser(UserDTO newUser)
+        public Result AddUser(UserGlobalDTO newUser)
         {
-
-            //var a = userTypeDTO.systemAdministrator;
-            //var task = sessionService.GetCurrentUser();
-            //UserDTO currentUser = null;
-            //if (task != null)
-            //{
-            //    currentUser = task.Result;
-            //}
             int userId = 0;
-            if (UserId.Value > 0)
+            if (newUser.Id == 0)
             {
-                userId= UserId.Value;
+                userId = 0;
             }
+            else
+            {
+                if (UserId.Value > 0)
+                {
+                    userId = UserId.Value;
+                }
+            }
+
             var isEmailExist = userService.AddUser(newUser, userId);
             if (isEmailExist)
             {
@@ -64,15 +60,10 @@ namespace MoneySystemServer.Controllers
                     ChangeUser2Manager(newUser.Id);
                 }
             }
-
-
             return Success();
-
-
-
         }
 
-
+        [CanEditUser]
         [HttpPut]
         public Result UpdateUser(UserDTO user)
         {
@@ -99,7 +90,7 @@ namespace MoneySystemServer.Controllers
         }
 
         [IsActive]
-        [IsPermission]
+        [CanEditUser]
         [HttpDelete("{id}")]
         public Result DeleteUser(int id)
         {
@@ -126,6 +117,7 @@ namespace MoneySystemServer.Controllers
             return Success(userService.GetUserTypes(UserId.Value));
         }
 
+
         [HttpPut]
         public Result ChangeUserTypeOrLenderAndDelete(LenderParams lenderParams)
         {
@@ -139,6 +131,13 @@ namespace MoneySystemServer.Controllers
             return Success(userService.GetAllUserType());
 
         }
+        [HttpGet]
+        public GResult<List<UserDTO>> getLenderByManager()
+        {
+            return Success(userService.getLenderByManager(UserId.Value));
+
+        }
 
     }
 }
+
