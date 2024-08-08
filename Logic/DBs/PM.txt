@@ -7,4 +7,4 @@ Scaffold-DbContext "Server=.;Database=MyMoneyB;user id=kollel;password=1234qwe!;
 C:\Users\Maneger\source\repos\MoneySystemServerSecond
 
 
-Scaffold-DbContext "Server=.;Database=MyMoneyB;user id=kollel;password=1234qwe!;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -OutputDir "C:\Users\manager\source\repos\MoneySystemServerSecond\Logic\DBs" -Namespace "Logic"-force
+Scaffold-DbContext "Server=.;Database=MyMoneyB;user id=kollel;password=1234qwe!;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -OutputDir "C:\החומר שלי\אילה תיכנות\פרקטיקום\clone\MyMoneyServer\Logic\DBs" -Namespace "Logic"-force

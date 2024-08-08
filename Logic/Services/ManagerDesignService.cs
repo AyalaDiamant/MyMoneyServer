@@ -13,6 +13,12 @@ namespace Logic.Services
         bool AddManagerDesign(ManagerDesignDTO managerDesign, int CurrentUserId);
         bool UpdateManagerDesign(ManagerDesignDTO managerDesign, int CurrentUserId);
         ManagerDesignDTO GetFile(int id);
+
+        // שייך לסרוייס אחר אבל עושה בעיות אז בינתיים זה פה
+        List<ManagerSettingDTO> GetManagerSetting(int currentUserId);
+        bool AddManagerSetting(ManagerSettingDTO managerSetting, int CurrentUserId);
+        bool UpdateManagerSetting(ManagerSettingDTO managerSetting, int CurrentUserId);
+
     }
     public class ManagerDesignService : IManagerDesignService
     {
@@ -103,5 +109,89 @@ namespace Logic.Services
             }
             return mdFile;
         }
+
+        //-----------
+        // שייך לסרוייס אחר אבל עושה בעיות אז בינתיים זה פה
+        public bool AddManagerSetting(ManagerSettingDTO managerSetting, int CurrentUserId)
+        {
+            var newManagerSetting = new ManagerSetting();
+            newManagerSetting.ManagerId = CurrentUserId;
+            newManagerSetting.ContactMen = managerSetting.ContactMen;
+            newManagerSetting.Email = managerSetting.Email;
+            newManagerSetting.Adress = managerSetting.Adress;
+            newManagerSetting.OrganizationName = managerSetting.OrganizationName;
+            newManagerSetting.Phon = managerSetting.Phon;
+            newManagerSetting.OrganizationType = managerSetting.OrganizationType;
+
+            dbService.entities.ManagerSettings.Add(newManagerSetting);
+            dbService.Save();
+
+            return true;
+        }
+        public bool UpdateManagerSetting(ManagerSettingDTO managerSetting, int CurrentUserId)
+        {
+            var dbUpdateManagerSetting = dbService.entities.ManagerSettings.FirstOrDefault(x => x.ManagerId == CurrentUserId);
+            if (dbUpdateManagerSetting == null)
+            {
+                return (AddManagerSetting(managerSetting, CurrentUserId));
+            }
+            else
+            {
+                dbUpdateManagerSetting.ManagerId = CurrentUserId;
+                dbUpdateManagerSetting.ContactMen = managerSetting.ContactMen;
+                dbUpdateManagerSetting.Email = managerSetting.Email;
+                dbUpdateManagerSetting.Adress = managerSetting.Adress;
+                dbUpdateManagerSetting.OrganizationName = managerSetting.OrganizationName;
+                dbUpdateManagerSetting.Phon = managerSetting.Phon;
+                dbUpdateManagerSetting.OrganizationType = managerSetting.OrganizationType;
+                dbService.Save();
+            }
+            return true;
+        }
+        public List<ManagerSettingDTO> GetManagerSetting(int currentUserId)
+        {
+            List<ManagerSettingDTO> Setting = new List<ManagerSettingDTO>();
+
+            var currentUser = dbService.entities.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+            if (currentUser.UserTypeId == 1)
+            {
+                return dbService.entities.ManagerSettings
+                      .Select(x => new ManagerSettingDTO
+                      {
+                          Id = x.Id,
+                          ManagerId = x.ManagerId,
+                          ContactMen = x.ContactMen,
+                          Email = x.Email,
+                          Adress = x.Adress,
+                          OrganizationName = x.OrganizationName,
+                          Phon = x.Phon,
+                          OrganizationType = x.OrganizationType
+                      }).ToList();
+            }
+            else
+            {
+                var managerSetting = dbService.entities.ManagerSettings
+                                .FirstOrDefault(x => x.ManagerId == currentUserId);
+                if (managerSetting != null)
+                {
+                    return new List<ManagerSettingDTO>
+                    {
+                            new ManagerSettingDTO
+                            {
+                                Id = managerSetting.Id,
+                                ManagerId = managerSetting.ManagerId,
+                                ContactMen = managerSetting.ContactMen,
+                                Email = managerSetting.Email,
+                                Adress = managerSetting.Adress,
+                                OrganizationName = managerSetting.OrganizationName,
+                                Phon = managerSetting.Phon,
+                                OrganizationType = managerSetting.OrganizationType
+                            }
+                    };
+                }
+                return new List<ManagerSettingDTO>();
+            }
+        }  
     }
 }

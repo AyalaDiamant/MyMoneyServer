@@ -100,7 +100,7 @@ namespace Logic.Services
                 NewDomain = x.NewDomain,
                 OldAmount = x.OldAmount,
                 NewAmount = x.NewAmount,
-                ActionOption = x.ActionOption
+                //ActionOption = x.ActionOption
             }).ToList();
 
 
@@ -122,7 +122,7 @@ namespace Logic.Services
             }
             newHistory.OldAmount = oldDetails.Sum;
             newHistory.NewAmount = newDetails.Sum;
-            newHistory.ActionOption = newDetails.ActionOption;
+            //newHistory.ActionOption = newDetails.ActionOption;
             if (newDetails.ActionOption == ActionOptions.delete|| newDetails.ActionOption == ActionOptions.IsNotActive)
             {
                 newHistory.NewAmount = noAmount;

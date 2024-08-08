@@ -55,11 +55,15 @@ public partial class User
 
     public virtual ICollection<ManagerDesign> ManagerDesigns { get; set; } = new List<ManagerDesign>();
 
+    public virtual ICollection<ManagerSetting> ManagerSettings { get; set; } = new List<ManagerSetting>();
+
     public virtual ICollection<PayOption> PayOptions { get; set; } = new List<PayOption>();
 
     public virtual ICollection<PresenceSetting> PresenceSettings { get; set; } = new List<PresenceSetting>();
 
     public virtual ICollection<Presence> Presences { get; set; } = new List<Presence>();
+
+    public virtual ICollection<ProductSettingsForDay> ProductSettingsForDays { get; set; } = new List<ProductSettingsForDay>();
 
     public virtual ICollection<Status> Statuses { get; set; } = new List<Status>();
 
